@@ -30,7 +30,7 @@ class ProductGateway(ProductRepository):
 
         cursor.execute(
             "SELECT id, name, price, quantity FROM products where id = ?",
-            (product_id)
+            (product_id,)
         )
 
         row = cursor.fetchone()
@@ -42,7 +42,7 @@ class ProductGateway(ProductRepository):
 
         cursor.execute(
             "SELECT id, name, price, quantity FROM products where name = ?",
-            (product_name)
+            (product_name,)
         )
 
         row = cursor.fetchone()
@@ -54,12 +54,12 @@ class ProductGateway(ProductRepository):
 
         cursor.execute(
             "UPDATE products SET name = ?, price = ?, quantity = ? WHERE id = ?",
-            (product.name, product.price, product.quantity, product.id)
+            (product.name, str(product.price), product.quantity, product.id)
         )
 
-        row = cursor.fetchone()
+        self.connection.commit()
 
-        return self._row_to_product(row) if row else None
+        return product
     
     @staticmethod
     def _row_to_product(row: tuple) -> Product:
